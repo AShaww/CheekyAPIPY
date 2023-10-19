@@ -34,28 +34,28 @@ async def add_todo(todo: dict) -> dict:
 
 
 @app.put('/todo/{id}', tags=['todos'])
-async def update_todo(id: int, body: dict) -> dict:
+async def update_todo(todo_id: int, body: dict) -> dict:
     for todo in todos:
-        if int((todo['id'])) == id:
+        if int((todo['id'])) == todo:
             todo['Activity'] = body['Activity']
             return {
-                'data': f"Todo with id {id} has been updated"
+                'data': f"Todo with id {todo} has been updated"
             }
 
     return {
-        'data': f"Todo with this id number {id} was not found !"
+        'data': f"Todo with this id number {todo_id} was not found !"
     }
 
 
 @app.delete('/todo/{id}', tags=['todos'])
-async def delete_todo(id: int) -> dict:
+async def delete_todo(todo_id: int) -> dict:
     for todo in todos:
         if int(todo["id"]) == id:
             todos.remove(todo)
             return {
-                "data": f"todo with id {id} has been deleted"
+                "data": f"todo with id {todo_id} has been deleted"
             }
 
         return {
-            'data': f"Todo with this id number {id} was not found !"
+            'data': f"Todo with this id number {todo_id} was not found !"
         }
