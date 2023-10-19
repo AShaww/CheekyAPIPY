@@ -1,5 +1,6 @@
 # Test your FastAPI endpoints
 
+# GET request to the root endpoint
 GET http://127.0.0.1:8000/
 Accept: application/json
 
@@ -7,6 +8,33 @@ Accept: application/json
 
 # GET request to /todo
 GET http://127.0.0.1:8000/todo
-Accept: application/json
+Accept: application.json
 
 ###
+
+# Test adding a new TODO item
+POST http://127.0.0.1:8000/todo
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id": "3",
+  "Activity": "New activity description"
+}
+
+###
+
+# Test updating a TODO item with ID 1
+PUT http://127.0.0.1:8000/todo/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "Activity": "Updated activity description"
+}
+
+###
+
+# Test deleting a TODO item with ID 2
+DELETE http://127.0.0.1:8000/todo/2
+Accept: application/json
