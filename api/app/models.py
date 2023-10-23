@@ -3,15 +3,18 @@ from sqlalchemy import Column, Integer, String
 from api.app.db.database import Base
 
 
-class User(Base):
+class Users(Base):
     __tablename__ = 'users'
+    __table_args__ = {"extend_existing": True}
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(50), unique=True)
+    hashed_password = Column(String(500))
 
 
 class Post(Base):
     __tablename__ = 'posts'
+    __table_args__ = {"extend_existing": True}
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer)
