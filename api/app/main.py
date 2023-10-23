@@ -51,6 +51,13 @@ async def get_post(post_id: int, db: db_dependency):
         raise HTTPException(status_code=404, detail='Post was not found')
     return post
 
+@app.delete("/posts/{post_id", status_code=status.HTTP_200_OK)
+async def delete_post(post_id: int, db: db_dependency):
+    db_post = db.query(models.Post).filter(models.Post.id == post_id).first()
+    if db_post is None:
+        raise HTTPException(status_code=404, detail='Post was not found')
+    db.delete(db_post)
+    db.commit()
 
 @app.get('/', tags=['ROOT'])
 async def root() -> dict:
