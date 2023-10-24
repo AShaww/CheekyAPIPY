@@ -9,11 +9,8 @@ from auth import auth
 from api.app.auth.auth import get_current_user
 
 
-
 app = FastAPI()
-
 app.include_router(auth.router)
-
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -28,6 +25,7 @@ def get_db():
 
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
+
 
 @app.get('/', tags=['root'])
 async def user(user: user_dependency, db: db_dependency):
