@@ -1,0 +1,59 @@
+from datetime import datetime
+from fastapi import APIRouter, Depends, HTTPException, Path
+from starlette import status
+from api.app import models as m
+from api.app.auth.auth import db_dependency, user_dependency
+
+router = APIRouter(
+    prefix="/issues",
+    tags=["issue"]
+)
+
+
+@router.get('/all', status_code=status.HTTP_200_OK)
+async def get_all_issues(db: db_dependency):
+    issues = db.query(m.Issue).all()
+
+    issue_base_list = [m.IssueBase(
+        title=issue.title,
+        description=issue.description,
+        status=issue.status,
+        created_at=issue.created_at,
+    ) for issue in issues]
+
+    return issue_base_list
+
+
+@router.post('/new', status_code=status.HTTP_201_CREATED)
+async def create_issue(issue: m.IssueBase, db: db_dependency):
+    db_issue = m.Issue(**issue.model_dump())
+    db.add(db_issue)
+    db.commit()
+
+    return 'Issue created'
+
+
+@router.put('/update/{issue_id}', status_code=status.HTTP_202_ACCEPTED)
+async def update_issue(issue_id: int, issue_update: m.IssueBase, db: db_dependency):
+    db_issue = db.query(m.Issue).filter(m.Issue.id == issue_id).first()
+    if db_issue is None:
+        raise HTTPException(status_code=404, detail='Issue was not found')
+
+    for key, value in issue_update.model_dump().items():
+        setattr(db_issue, key, value)
+
+    db_issue.updated_at = datetime.utcnow()
+    db.commit()
+
+    return 'Issue updated'
+
+
+@router.delete("/{issue_id}", status_code=status.HTTP_200_OK)
+async def delete_issue(issue_id: int, db: db_dependency):
+    db_issue = db.query(m.Issue).filter(m.Issue.id == issue_id).first()
+    if db_issue is None:
+        raise HTTPException(status_code=404, detail='Post was not found')
+    db.delete(db_issue)
+    db.commit()
+
+    return 'Issue deleted'
