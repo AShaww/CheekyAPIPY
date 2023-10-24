@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, HTTPException
 from starlette import status
 
 from api.app import models as m
@@ -11,7 +11,7 @@ router = APIRouter(
 
 
 @router.get('/me')
-async def user_index(user_auth: user_dependency, db: db_dependency):
+async def user_index(user_auth: user_dependency):
     if user_auth is None:
         raise HTTPException(status_code=401, detail='Authentication Failed')
     return {"User": user_auth}

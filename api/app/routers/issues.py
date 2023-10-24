@@ -1,8 +1,9 @@
 from datetime import datetime
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, HTTPException
 from starlette import status
 from api.app import models as m
-from api.app.auth.auth import db_dependency, user_dependency
+from api.app.auth.auth import db_dependency
+from datetime import timezone
 
 router = APIRouter(
     prefix="/issues",
@@ -42,7 +43,9 @@ async def update_issue(issue_id: int, issue_update: m.IssueBase, db: db_dependen
     for key, value in issue_update.model_dump().items():
         setattr(db_issue, key, value)
 
-    db_issue.updated_at = datetime.utcnow()
+    now = datetime.now(timezone.utc)
+
+    db_issue.updated_at = now
     db.commit()
 
     return 'Issue updated'

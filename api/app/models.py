@@ -34,9 +34,10 @@ class Issue(Base):
 
 
 @event.listens_for(Issue, 'before_insert')
-def set_created_at(mapper, connection, target):
-    target.created_at = datetime.utcnow()
-    target.updated_at = datetime.utcnow()
+def set_created_at(_mapper, _connection, target):
+    now = datetime.now(timezone.utc)
+    target.created_at = now
+    target.updated_at = now
 
 
 class Post(Base):
