@@ -1,5 +1,6 @@
 from datetime import timedelta, datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException
+from jose import JWTError, jwt
 from pydantic import BaseModel
 from starlette import status
 from typing import Annotated
@@ -9,7 +10,6 @@ from api.app.db.database import SessionLocal
 from api.app.models import Users
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
-from jose import jwt, JWTError
 from api.app import config
 
 router = APIRouter(
@@ -96,3 +96,5 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail='Could not validate user.')
+
+user_dependency = Annotated[dict, Depends(get_current_user)]
