@@ -6,6 +6,9 @@ from api.app import models
 from api.app.db.database import engine, SessionLocal, Base
 from sqlalchemy.orm import Session
 from auth import auth
+from api.app.auth.auth import get_current_user
+
+
 
 app = FastAPI()
 
@@ -24,13 +27,13 @@ def get_db():
 
 
 db_dependency = Annotated[Session, Depends(get_db)]
-
+user_dependency = Annotated[dict, Depends(get_current_user)]
 
 @app.get('/', tags=['root'])
-async def user(user: None, db: db_dependency):
+async def user(user: user_dependency, db: db_dependency):
     if user is None:
         raise HTTPException(status_code=401, detail='Authentication Failed')
-    return {'Ping=': 'Pong', 'Hello': 'World'}
+    return {"User": user}
 
 
 # @app.post("/users/", status_code=status.HTTP_201_CREATED, tags=['users'])
