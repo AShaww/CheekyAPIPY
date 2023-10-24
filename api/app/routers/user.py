@@ -17,11 +17,9 @@ async def user_index(user_auth: user_dependency, db: db_dependency):
     return {"User": user_auth}
 
 
-# Need permissions on @router.get('/users/{user_id} `since we don't want to see user
-# by search unless we do when searching for user to invite -> need to not show 'hashed_password'
 @router.get('/users/{user_id}', status_code=status.HTTP_200_OK)
 async def read_get_user(user_auth: user_dependency, user_id: int, db: db_dependency):
-    user = db.query(m.Users).filter(user_id == m.Users.id).first()
+    user = db.query(m.UserBase).filter(user_id == m.Users.id).first()
     if user_auth is None:
         raise HTTPException(status_code=404, detail='User not found')
     return user
