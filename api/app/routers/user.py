@@ -16,9 +16,10 @@ async def user_profile(user_auth: user_dependency):
     return {"User": user_auth}
 
 
-@router.get('/{user_id}', status_code=status.HTTP_200_OK)
+@router.get('/{user_id}', response_model=m.UserBase, status_code=status.HTTP_200_OK)
 async def read_get_user(user_auth: user_dependency, user_id: int, db: db_dependency):
-    user = db.query(m.UserBase).filter(user_id == m.Users.id).first()
+    user = db.query(m.Users).filter(m.Users.id == user_id).first()
     if user_auth is None:
-        raise HTTPException(status_code=404, detail='User not found')
+        if user is None:
+            raise HTTPException(status_code=404, detail='User not found')
     return user
