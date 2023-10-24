@@ -2,7 +2,6 @@ import enum
 from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String, Text, DateTime, Enum, func, text
 from api.app.db.database import Base
-from datetime import datetime
 
 
 class Users(Base):
@@ -37,7 +36,7 @@ class Issue(Base):
     id = Column(Integer, primary_key=True, index=True, nullable=False)
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=False)
-    status = Column(Enum(IssueStatus), nullable=False, server_default=text('OPEN'))
+    status = Column(Enum(IssueStatus), nullable=False, server_default=text('"OPEN"'))
     created_at = Column(
         DateTime,
         nullable=False,
