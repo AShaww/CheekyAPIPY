@@ -10,13 +10,14 @@ from api.app.models import Users
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import jwt, JWTError
+from api.app import config
 
 router = APIRouter(
     prefix='/auth',
     tags=['auth']
 )
 
-SECRET_KEY = 'jJ4hfoDWwyJTQAShkM206toB2OZnLyUL6sFlugMXNcwhMcovAvTjpxApqpSUBLeduFlvIHlEsch5t5pte7MnfTCzNjGnQDYq'
+
 ALGORITHM = 'HS256'
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
@@ -69,10 +70,16 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
 
 
 def authenticate_user(username: str, password: str, db):
-    user = db.query(Users.filter(Users.username == username).first())
+    user = db.query(Users).filter(Users.username == username).first()
     if not user:
         return False
     if not bcrypt_context.verify(password, user.hashed_password):
         return False
     return user
 
+
+def create_access_token(username: str, user_id: str, expires_delta: timedelta):
+    encode = {'sub': username, 'id': user_id}
+    expires = datetime.utcnow() + expires_delta
+    encode.update({'exp': expires})
+    return jwt.encode(encode, config.SECRET_KEY, algorithm=ALGORITHM)
