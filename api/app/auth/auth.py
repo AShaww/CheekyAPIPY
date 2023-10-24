@@ -1,4 +1,4 @@
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from starlette import status
@@ -78,7 +78,8 @@ def authenticate_user(username: str, password: str, db):
 
 def create_access_token(username: str, user_id: str, expires_delta: timedelta):
     encode = {'sub': username, 'id': user_id}
-    expires = datetime.utcnow() + expires_delta
+    current_time = datetime.now(timezone.utc)
+    expires = current_time + expires_delta
     encode.update({'exp': expires})
     return jwt.encode(encode, config.SECRET_KEY, algorithm=config.ALGORITHM)
 
