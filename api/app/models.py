@@ -1,6 +1,8 @@
+import enum
 from pydantic import BaseModel
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Text, DateTime, Enum, func, text
 from api.app.db.database import Base
+from datetime import datetime
 
 
 class Users(Base):
@@ -20,6 +22,32 @@ class Post(Base):
     user_id = Column(Integer)
     title = Column(String(50))
     content = Column(String(100))
+
+
+class IssueStatus(enum.Enum):
+    OPEN = 'OPEN'
+    IN_PROGRESS = 'IN_PROGRESS'
+    CLOSED = 'CLOSED'
+
+
+class Issue(Base):
+    __tablename__ = 'issues'
+    __table_args__ = {"extend_existing": True}
+
+    id = Column(Integer, primary_key=True, index=True, nullable=False)
+    title = Column(String(255), nullable=False)
+    description = Column(Text, nullable=False)
+    status = Column(Enum(IssueStatus), nullable=False, server_default=text('OPEN'))
+    created_at = Column(
+        DateTime,
+        nullable=False,
+        server_default=func.current_timestamp(),
+    )
+    updated_at = Column(
+        DateTime,
+        nullable=False,
+        onupdate=func.current_timestamp(),
+    )
 
 
 class PostBase(BaseModel):
