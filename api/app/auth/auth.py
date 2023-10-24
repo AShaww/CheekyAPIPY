@@ -18,8 +18,6 @@ router = APIRouter(
 )
 
 
-ALGORITHM = 'HS256'
-
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
 
@@ -82,4 +80,4 @@ def create_access_token(username: str, user_id: str, expires_delta: timedelta):
     encode = {'sub': username, 'id': user_id}
     expires = datetime.utcnow() + expires_delta
     encode.update({'exp': expires})
-    return jwt.encode(encode, config.SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(encode, config.SECRET_KEY, algorithm=config.ALGORITHM)

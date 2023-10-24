@@ -12,3 +12,8 @@ if not DATABASE_URL:
 SECRET_KEY = os.environ.get("SECRET_KEY")
 if not SECRET_KEY:
     sys.exit("ERROR: SECRET_KEY is not set.")
+
+
+ALGORITHM = os.environ.get("ALGORITHM")
+if not ALGORITHM:
+    sys.exit("ERROR: ALGORITHM is not set.")
