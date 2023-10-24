@@ -16,6 +16,8 @@ async def create_post(post: m.PostBase, db: db_dependency):
     db.add(db_post)
     db.commit()
 
+    return 'Post created'
+
 
 @router.get("/{post_id}", status_code=status.HTTP_200_OK)
 async def get_post(post_id: int, db: db_dependency):
@@ -32,3 +34,5 @@ async def delete_post(post_id: int, db: db_dependency):
         raise HTTPException(status_code=404, detail='Post was not found')
     db.delete(db_post)
     db.commit()
+
+    return 'Post deleted'
