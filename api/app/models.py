@@ -63,4 +63,9 @@ class UserBase(BaseModel):
 class IssueBase(BaseModel):
     title: str
     description: str
+
+
+class IssueDisplay(IssueBase):
     status: IssueStatus
+    created_at: datetime
+    updated_at: datetime
