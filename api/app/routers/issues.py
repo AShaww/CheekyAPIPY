@@ -4,6 +4,7 @@ from starlette import status
 from api.app import models as m
 from api.app.auth.auth import db_dependency
 from datetime import timezone
+from api.app.models import IssueDisplay
 
 router = APIRouter(
     prefix="/issues",
@@ -15,14 +16,15 @@ router = APIRouter(
 async def get_all_issues(db: db_dependency):
     issues = db.query(m.Issue).all()
 
-    issue_base_list = [m.IssueBase(
+    issue_display_list = [IssueDisplay(
         title=issue.title,
         description=issue.description,
         status=issue.status,
         created_at=issue.created_at,
+        updated_at=issue.updated_at,
     ) for issue in issues]
 
-    return issue_base_list
+    return issue_display_list
 
 
 @router.post('/new', status_code=status.HTTP_201_CREATED)
