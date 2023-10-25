@@ -64,4 +64,3 @@ class IssueBase(BaseModel):
     title: str
     description: str
     status: IssueStatus
-    created_at: datetime
