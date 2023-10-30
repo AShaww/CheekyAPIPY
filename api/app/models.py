@@ -67,6 +67,7 @@ class IssueBase(BaseModel):
 
 
 class IssueDisplay(IssueBase):
+    id: int
     status: IssueStatus
     created_at: datetime
     updated_at: datetime

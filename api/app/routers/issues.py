@@ -11,11 +11,13 @@ router = APIRouter(
     tags=["issue"]
 )
 
-@router.get('/all', status_code=status.HTTP_200_OK)
+
+@router.get('/', status_code=status.HTTP_200_OK)
 async def get_all_issues(db: db_dependency):
     issues = db.query(m.Issue).all()
 
     issue_display_list = [IssueDisplay(
+        id=issue.id,
         title=issue.title,
         description=issue.description,
         status=issue.status,
@@ -43,7 +45,7 @@ async def create_issue(issue: m.IssueBase, db: db_dependency):
     return 'Issue created'
 
 
-@router.put('/update/{issue_id}', status_code=status.HTTP_202_ACCEPTED)
+@router.put('/{issue_id}', status_code=status.HTTP_202_ACCEPTED)
 async def update_issue(issue_id: int, issue_update: m.IssueBase, db: db_dependency):
     db_issue = db.query(m.Issue).filter(m.Issue.id == issue_id).first()
     if db_issue is None:
