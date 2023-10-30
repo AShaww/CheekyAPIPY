@@ -2,7 +2,7 @@ from datetime import datetime
 from fastapi import APIRouter, HTTPException
 from starlette import status
 from api.app import models as m
-from api.app.auth.auth import db_dependency
+from api.app.auth.auth import db_dependency, user_dependency
 from datetime import timezone
 from api.app.models import IssueDisplay
 
@@ -10,7 +10,6 @@ router = APIRouter(
     prefix="/issues",
     tags=["issue"]
 )
-
 
 @router.get('/all', status_code=status.HTTP_200_OK)
 async def get_all_issues(db: db_dependency):
@@ -25,6 +24,14 @@ async def get_all_issues(db: db_dependency):
     ) for issue in issues]
 
     return issue_display_list
+
+
+@router.get('/{issue_id}', status_code=status.HTTP_200_OK)
+async def get_issue_by_id(issue_id: int, db: db_dependency):
+    db_issue = db.query(m.Issue).filter(m.Issue.id == issue_id).first()
+    if db_issue is None:
+        raise HTTPException(status_code=404, detail='Post was not found')
+    return db_issue
 
 
 @router.post('/new', status_code=status.HTTP_201_CREATED)
@@ -53,7 +60,7 @@ async def update_issue(issue_id: int, issue_update: m.IssueBase, db: db_dependen
     return 'Issue updated'
 
 
-@router.delete("/{issue_id}", status_code=status.HTTP_200_OK)
+@router.delete('/{issue_id}', status_code=status.HTTP_200_OK)
 async def delete_issue(issue_id: int, db: db_dependency):
     db_issue = db.query(m.Issue).filter(m.Issue.id == issue_id).first()
     if db_issue is None:
