@@ -1,9 +1,10 @@
 import enum
 from datetime import datetime, timezone
-
-from pydantic import BaseModel
-from sqlalchemy import Column, Integer, String, Text, DateTime, Enum, func, text, event
 from api.app.db.database import Base
+from pydantic import BaseModel
+from sqlalchemy import (Column, Integer, String,
+                        Text, DateTime, Enum,
+                        func, text, event)
 
 
 class IssueStatus(enum.Enum):
