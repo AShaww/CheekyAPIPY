@@ -51,7 +51,7 @@ async def create_user(db: db_dependency,
         hashed_password=bcrypt_context.hash(create_user_request.password),
     )
     #  Leaving this print here for debugging when I do the frontend login
-    print(create_user_model.id, create_user_model.id, create_user_model.hashed_password)
+    print(create_user_model.id, create_user_model.hashed_password)
     db.add(create_user_model)
     db.commit()
 
