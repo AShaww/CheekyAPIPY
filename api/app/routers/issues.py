@@ -45,7 +45,7 @@ async def create_issue(issue: m.IssueBase, db: db_dependency):
     return 'Issue created'
 
 
-@router.put('/{issue_id}/edit', status_code=status.HTTP_202_ACCEPTED)
+@router.patch('/{issue_id}/edit', status_code=status.HTTP_202_ACCEPTED)
 async def update_issue(issue_id: int, issue_update: m.IssueBase, db: db_dependency):
     db_issue = db.query(m.Issue).filter(m.Issue.id == issue_id).first()
     if db_issue is None:
