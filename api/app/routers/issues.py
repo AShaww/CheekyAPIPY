@@ -62,8 +62,9 @@ async def update_issue(issue_id: int, issue_update: m.IssueBase, db: db_dependen
     return 'Issue updated'
 
 
-@router.delete('/{issue_id}', status_code=status.HTTP_200_OK)
+@router.delete('/{issue_id}', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_issue(issue_id: int, db: db_dependency):
+    print(f"Deleting issue with ID: {issue_id}")
     db_issue = db.query(m.Issue).filter(m.Issue.id == issue_id).first()
     if db_issue is None:
         raise HTTPException(status_code=404, detail='Post was not found')
